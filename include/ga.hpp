@@ -165,14 +165,19 @@ private:
   void SwapRandomBits(uint8_t& a, uint8_t& b) const
   {
     std::uniform_int_distribution<int> id(0, 1);
+
+    std::bernoulli_distribution bd(rate);
+
     uint8_t mask = 0x00;
     for (int i = 0; i < 8; ++i) {
       mask <<= 1;
-      mask |= id(rng_mt);
+      if (bd(rng_mt)) {
+        mask |= 1;
+      }
     }
 
-    uint8_t c = (a & mask) | (b & ~mask);
-    uint8_t d = (a & ~mask) | (b & mask);
+    uint8_t c = (a & ~mask) | (b & mask);
+    uint8_t d = (a & mask) | (b & ~mask);
 
     a = c;
     b = d;
@@ -289,8 +294,8 @@ class ReplacePopulationAlgorithm : public PopulationUpdateAlgorithm<InputType>
 
 public:
   ReplacePopulationAlgorithm()
-    : selection_algorithm(std::make_unique<TournamentSelection<InputType>>(3)),
-      crossover_algorithm(std::make_unique<RandomCrossover<InputType>>(0.5)),
+    : selection_algorithm(std::make_unique<TournamentSelection<InputType>>(3)), // TODO add params for the values passed to the constructors
+      crossover_algorithm(std::make_unique<RandomCrossover<InputType>>(0.1)),
       mutation_operator(std::make_unique<MutationOperator<InputType>>(0.005))
   {}
   
