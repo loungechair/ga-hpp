@@ -27,3 +27,7 @@
 *.exe
 *.out
 *.app
+/ga-hpp/Debug
+/ga-hpp/Release
+/ga-hpp/ga-hpp.VC.VC.opendb
+/ga-hpp/ga-hpp.VC.db
